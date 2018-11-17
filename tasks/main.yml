@@ -1,0 +1,16 @@
+---
+- name: install ca
+  import_tasks: install_ca.yml
+  tags:
+    - install
+
+- name: install openvpn
+  import_tasks: install_openvpn.yml
+  tags:
+    - install
+
+- name: install consul service definition
+  import_tasks: consul.yml
+  when: openvpn_consul_service_enabled
+  tags:
+    - consul_definition
