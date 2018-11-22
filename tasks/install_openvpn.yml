@@ -1,0 +1,6 @@
+---
+- name: OPENVPN | Install openvpn
+  apt:
+    name: openvpn
+    state: present
+

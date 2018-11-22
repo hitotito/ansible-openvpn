@@ -1,0 +1,78 @@
+---
+- name: CA | Install easy-rsa
+  apt:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - easy-rsa
+    - openvpn
+
+- name: CA | Create CA folder
+  shell: | 
+    make-cadir {{ openvpn_folder_ca_root }}
+  args:
+    creates: "{{ openvpn_folder_ca_root }}"
+
+- name: CA | Copy vars file
+  template:
+    src: vars.j2
+    dest: "{{ openvpn_folder_ca_root }}/vars"
+    owner: root
+    group: root
+    mode: 0644
+
+- name: CA | Create openssl.cnf symlink
+  file:
+    src: "{{ openvpn_folder_ca_root }}/openssl-1.0.0.cnf"
+    dest: "{{ openvpn_folder_ca_root }}/openssl.cnf"
+    state: link
+
+- name: CA | Check if ca.crt already exists
+  stat:
+    path: "{{ openvpn_folder_ca_root }}/keys/ca.crt"
+  register: stat_result
+
+- name: CA | Clean all previous CA
+  when:
+    openvpn_ca_force_clean_all or
+    stat_result.stat.exists == False
+  shell: |
+    source ./vars && ./clean-all
+  args:
+    executable: /bin/bash
+    chdir: "{{ openvpn_folder_ca_root }}"
+
+- name: CA | Build CA
+  shell: | 
+    source ./vars && ./build-ca --batch
+  args:
+    executable: /bin/bash
+    chdir: "{{ openvpn_folder_ca_root }}"
+    creates: "{{ openvpn_folder_ca_root }}/keys/ca.key"
+
+- name: CA | Build key server
+  shell: |
+    source ./vars && ./build-key-server --batch {{ openvpn_ca_key_server_name }}
+  args:
+    executable: /bin/bash
+    chdir: "{{ openvpn_folder_ca_root }}"
+    creates: "{{ openvpn_folder_ca_root }}/keys/{{ openvpn_ca_key_server_name }}.key"
+
+- name: CA | Generate Diffie-Hellman keys
+  shell: |
+    source ./vars && ./build-dh
+  args:
+    executable: /bin/bash
+    chdir: "{{ openvpn_folder_ca_root }}"
+    creates: "{{ openvpn_folder_ca_root }}/keys/dh2048.pem"
+
+- name: CA | Generate HMAC signature
+  shell: |
+    openvpn --genkey --secret keys/ta.key
+  args:
+    chdir: "{{ openvpn_folder_ca_root }}"
+    creates: "{{ openvpn_folder_ca_root }}/keys/ta.key"
+
+
+
+# TODO - need to adjust sysctl net.ipv4.ip_forward

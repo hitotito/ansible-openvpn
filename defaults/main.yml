@@ -1,0 +1,19 @@
+---
+
+openvpn_folder_ca_root: /srv/openvpn-ca
+
+openvpn_ca_force_clean_all: False
+openvpn_ca_key_country: US
+openvpn_ca_key_province: CA
+openvpn_ca_key_city: SanFrancisco
+openvpn_ca_key_org: openvpnorg
+openvpn_ca_key_email: me@myhost.mydomain
+openvpn_ca_key_ou: MyOrganizationalUnit
+openvpn_ca_key_name: EasyRSA
+
+openvpn_ca_key_server_name: server
+
+# list of objects, which must contain following keys:
+#   name: <name of vpn client>
+#
+openvpn_clients: []
