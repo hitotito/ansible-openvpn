@@ -1,0 +1,33 @@
+---
+# TODO - comment on iterative nature of this file
+- name: CLIENT_KEYS | Check if client key already exists
+  stat:
+    path: "{{ openvpn_folder_ca_keys }}/{{ client.name }}.key"
+  register: stat_client_key
+
+- name: CLIENT_KEYS | Generate client certificate and key
+  when: stat_client_key.stat.exists == False
+  block:
+    - name: CLIENT_KEYS | Generate client key
+      shell: |
+        source ./vars &&
+        export KEY_EMAIL={{ client.email }} &&
+        ./build-key --batch {{ client.name }}
+      args:
+        executable: /bin/bash
+        chdir: "{{ openvpn_folder_ca_root }}"
+     
+    - name: CLIENT_KEYS | Override client pass
+      when: False
+      shell: |
+        source ./vars && ./build-key-pass --batch {{ client.name }}
+      args:
+        executable: /bin/bash
+        chdir: "{{ openvpn_folder_ca_root }}"
+
+- name: CLIENT_KEYS | Generate openvpn client config
+  shell: |
+    {{ openvpn_folder_client_root }}/make_config.sh {{ client.name }}
+  args:
+    executable: /bin/bash
+    creates: "{{ openvpn_folder_client_files }}/{{ client.name }}.ovpn"

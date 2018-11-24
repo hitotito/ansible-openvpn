@@ -9,13 +9,19 @@
   tags:
     - install
 
+- name: client openvpn
+  import_tasks: client.yml
+  tags:
+    - install
+    - client_keys
+
 - name: generate client keys
-  include_tasks: client.yml
+  include_tasks: client_keys.yml
   with_items: "{{ openvpn_clients }}"
   loop_control:
     loop_var: client
   tags:
-    - clients_keys
+    - client_keys
 
 - name: install consul service definition
   import_tasks: consul.yml

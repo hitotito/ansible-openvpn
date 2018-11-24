@@ -1,6 +1,7 @@
 ---
-
-openvpn_folder_ca_root: /srv/openvpn-ca
+openvpn_folder_os_root: /etc/openvpn
+openvpn_folder_ca_root: /srv/openvpn/ca
+openvpn_folder_client_root: /srv/openvpn/client-configs
 
 openvpn_ca_force_clean_all: False
 openvpn_ca_key_country: US
@@ -15,5 +16,6 @@ openvpn_ca_key_server_name: server
 
 # list of objects, which must contain following keys:
 #   name: <name of vpn client>
+#   email: <email of vpn client>
 #
 openvpn_clients: []

@@ -1,0 +1,3 @@
+---
+openvpn_folder_ca_keys: "{{ openvpn_folder_ca_root }}/keys"
+openvpn_folder_client_files: "{{ openvpn_folder_client_root }}/files"

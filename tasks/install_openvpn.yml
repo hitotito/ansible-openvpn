@@ -4,3 +4,31 @@
     name: openvpn
     state: present
 
+- name: OPENVPN | Set ipv4 ip_forward
+  sysctl:
+    name: net.ipv4.ip_forward
+    value: 1
+    sysctl_set: yes
+    reload: yes
+
+- name: OPENVPN | Create symlinks for server crts & keys
+  file:
+    src: "{{ openvpn_folder_ca_keys }}/{{ item }}"
+    dest: "/etc/openvpn/{{ item }}"
+    state: link
+  with_items:
+    - ca.crt
+    - server.crt
+    - server.key
+    - ta.key
+    - dh2048.pem
+
+- name: OPENVPN | Copy server.conf
+  template:
+    src: server.conf.j2
+    dest: "{{ openvpn_folder_os_root }}/{{ openvpn_ca_key_server_name }}.conf"
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - Restart openvpn

@@ -73,6 +73,3 @@
     chdir: "{{ openvpn_folder_ca_root }}"
     creates: "{{ openvpn_folder_ca_root }}/keys/ta.key"
 
-
-
-# TODO - need to adjust sysctl net.ipv4.ip_forward
