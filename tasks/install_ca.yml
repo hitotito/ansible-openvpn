@@ -1,11 +1,10 @@
 ---
 - name: CA | Install easy-rsa
   apt:
-    name: "{{ item }}"
+    name:
+      - easy-rsa
+      - openvpn
     state: present
-  with_items:
-    - easy-rsa
-    - openvpn
 
 - name: CA | Create CA folder
   shell: | 
