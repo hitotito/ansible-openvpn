@@ -7,7 +7,7 @@
     state: present
 
 - name: CA | Create CA folder
-  shell: | 
+  command: |
     make-cadir {{ openvpn_folder_ca_root }}
   args:
     creates: "{{ openvpn_folder_ca_root }}"
@@ -42,7 +42,7 @@
     chdir: "{{ openvpn_folder_ca_root }}"
 
 - name: CA | Build CA
-  shell: | 
+  shell: |
     source ./vars && ./build-ca --batch
   args:
     executable: /bin/bash
@@ -66,7 +66,7 @@
     creates: "{{ openvpn_folder_ca_root }}/keys/dh2048.pem"
 
 - name: CA | Generate HMAC signature
-  shell: |
+  command: |
     openvpn --genkey --secret keys/ta.key
   args:
     chdir: "{{ openvpn_folder_ca_root }}"

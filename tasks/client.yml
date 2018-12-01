@@ -10,7 +10,7 @@
     - "{{ openvpn_folder_client_root }}"
     - "{{ openvpn_folder_client_files }}"
 
-- name: CLIENT | Copy client base.conf 
+- name: CLIENT | Copy client base.conf
   template:
     src: base.conf.j2
     dest: "{{ openvpn_folder_client_root }}/base.conf"

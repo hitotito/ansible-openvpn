@@ -16,7 +16,7 @@
       args:
         executable: /bin/bash
         chdir: "{{ openvpn_folder_ca_root }}"
-     
+
     - name: CLIENT_KEYS | Override client pass
       when: False
       shell: |
@@ -26,7 +26,7 @@
         chdir: "{{ openvpn_folder_ca_root }}"
 
 - name: CLIENT_KEYS | Generate openvpn client config
-  shell: |
+  command: |
     {{ openvpn_folder_client_root }}/make_config.sh {{ client.name }}
   args:
     executable: /bin/bash
