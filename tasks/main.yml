@@ -9,6 +9,12 @@
   tags:
     - install
 
+- name: configure firewall
+  import_tasks: firewall.yml
+  tags:
+    - install
+    - firewall
+
 - name: client openvpn
   import_tasks: client.yml
   tags:
